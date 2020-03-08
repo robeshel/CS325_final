@@ -52,11 +52,20 @@ int main (int argc, char *argv[])
 
   //get name of file to open from command line
 
-  string iFileName;
-  cout << "Enter name of file" << endl;
-  cin >> iFileName;
-  ifstream iFile(*argv);
-  if(iFileName.is_open()){
+  string iFileName = argv[1];
+  string oFileName = iFileName + ".tour";
+  int numCities;
+  int i;
+
+  numCities = line_counter(iFileName);  //set numCities equal to the number of cities in the input file
+
+  ifstream iFile;
+  ofstream oFile;
+  //open input and output file
+  iFile.open(iFileName);
+  oFile.open(oFileName);
+
+  if(iFile.is_open()){
     while(getline(iFile, iFileName)){
       cout << "file opened" << endl;
     }
@@ -66,19 +75,13 @@ int main (int argc, char *argv[])
   }
 
 
-  string oFileName = iFileName + ".tour";
-  int numCities;
-  int i;
 
 
-  ofstream oFile;
 
-  //set numCities equal to the number of cities in the input file
-  numCities = line_counter(iFileName);
 
-  //open input and output file
-  iFile.open(iFileName);
-  oFile.open(oFileName);
+
+
+
 
   //create a city vector and fill it from input file
   //city cityVector[numCities];
