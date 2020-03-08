@@ -49,13 +49,13 @@ void tsp_alg (vector<city> &cityVector, int numCities)
   }
 }
 
-int main (int argc, char** argv)
+int main (int argc, char* argv[])
 {
 
   //get name of file to open from command line
 
   string iFileName = argv[1];
-  string oFileName = argv[1] + ".tour";
+  //string oFileName = argv[1] + ".tour";
   int numCities;
   int i;
 
@@ -76,14 +76,6 @@ int main (int argc, char** argv)
   else{
     cout << "file not found" << endl;
   }
-
-
-
-
-
-
-
-
 
 
   //create a city vector and fill it from input file
