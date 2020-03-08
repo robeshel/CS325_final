@@ -10,7 +10,7 @@ Nick Vandomelen
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
-#include <string.h>
+#include <string>
 #include <vector>
 using namespace std;
 
@@ -64,8 +64,8 @@ int main (int argc, char *argv[])
   ifstream iFile;
   ofstream oFile;
   //open input and output file
-  iFile.open(iFileName);
-  oFile.open(oFileName);
+  iFile.open(iFileName + ".txt");
+  oFile.open(oFileName + ".tour");
 
   if(iFile.is_open()){
     while(getline(iFile, iFileName)){
