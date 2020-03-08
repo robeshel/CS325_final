@@ -46,6 +46,9 @@ void tsp_alg (vector<city> &cityVector, int numCities)
   for (int i = 0; i < numCities; i++)
   {
     cout << "cityVector[" << i << "].identity = " << cityVector[i].identity << endl;
+    cout << "cityVector[" << i << "].x = " << cityVector[i].x << endl;
+    cout << "cityVector[" << i << "].y = " << cityVector[i].y << endl;
+    cout << endl;
   }
 }
 
