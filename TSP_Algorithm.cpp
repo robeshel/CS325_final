@@ -25,14 +25,14 @@ struct city {
 //int line_counter(string iFileName)
 int line_counter()
 {
-  ifstream iFile;
+  ifstream iFile1;
   string line;
-  iFile.open("tsp_example_1.txt");
+  iFile1.open("tsp_example_1.txt");
 
   int lineCounter = 0;
-  while (!iFile.eof())
+  while (!iFile1.eof())
   {
-    getline(iFile, line);
+    getline(iFile1, line);
     lineCounter++;
   }
   iFile.close();
@@ -84,9 +84,12 @@ int main (int argc, char* argv[])
   for (i = 0; i < numCities; i++)
   {
     cityVector.push_back(city());
-    iFile >> cityVector[i].identity;
-    iFile >> cityVector[i].x;
-    iFile >> cityVector[i].y;
+    // iFile >> cityVector[i].identity;
+    // iFile >> cityVector[i].x;
+    // iFile >> cityVector[i].y;
+    cityVector[i].identity = i;
+    cityVector[i].x = i;
+    cityVector[i].y = i;
   }
 
   //at this point, cityVector has all data from input file
