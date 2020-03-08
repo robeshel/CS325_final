@@ -8,10 +8,10 @@ Nick Vandomelen
 
 */
 #include <stdio.h>
-#include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
+#include <iomanip>
 using namespace std;
 
 struct city {
@@ -48,7 +48,7 @@ void tsp_alg (vector<city> &cityVector, int numCities)
   }
 }
 
-int main (int argc, char *argv[])
+int main (int argc, char** argv)
 {
 
   //get name of file to open from command line
