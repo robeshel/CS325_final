@@ -35,8 +35,8 @@ int line_counter()
     getline(iFile1, line);
     lineCounter++;
   }
-  iFile.close();
-  return lineCounter;
+  iFile1.close();
+  return (lineCounter - 1);   //-1 because of extra line
 }
 
 //finding a solution to the TSP
@@ -70,7 +70,7 @@ int main (int argc, char* argv[])
 
   if(iFile.is_open()){
     while(getline(iFile, iFileName)){
-      cout << "file opened" << endl;
+      cout << "" << endl;
     }
   }
   else{
