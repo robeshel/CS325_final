@@ -68,14 +68,14 @@ int main (int argc, char* argv[])
   iFile.open(argv[1]);
   oFile.open("tsp_example_1.txt.tour");
 
-  if(iFile.is_open()){
-    while(getline(iFile, iFileName)){
-      cout << "" << endl;
-    }
-  }
-  else{
-    cout << "file not found" << endl;
-  }
+  // if(iFile.is_open()){
+  //   while(getline(iFile, iFileName)){
+  //     cout << "" << endl;
+  //   }
+  // }
+  // else{
+  //   cout << "file not found" << endl;
+  // }
 
 
   //create a city vector and fill it from input file
@@ -84,12 +84,12 @@ int main (int argc, char* argv[])
   for (i = 0; i < numCities; i++)
   {
     cityVector.push_back(city());
-    // iFile >> cityVector[i].identity;
-    // iFile >> cityVector[i].x;
-    // iFile >> cityVector[i].y;
-    cityVector[i].identity = i;
-    cityVector[i].x = i;
-    cityVector[i].y = i;
+    iFile >> cityVector[i].identity;
+    iFile >> cityVector[i].x;
+    iFile >> cityVector[i].y;
+    // cityVector[i].identity = i;
+    // cityVector[i].x = i;
+    // cityVector[i].y = i;
   }
 
   //at this point, cityVector has all data from input file
