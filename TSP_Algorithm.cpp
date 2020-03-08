@@ -55,7 +55,7 @@ int main (int argc, char** argv)
   //get name of file to open from command line
 
   string iFileName = argv[1];
-  string oFileName = iFileName + ".tour";
+  string oFileName = argv[1] + ".tour";
   int numCities;
   int i;
 
@@ -66,7 +66,7 @@ int main (int argc, char** argv)
   ofstream oFile;
   //open input and output file
   iFile.open(argv[1]);
-  oFile.open(argv + ".tour");
+  oFile.open(oFileName);
 
   if(iFile.is_open()){
     while(getline(iFile, iFileName)){
