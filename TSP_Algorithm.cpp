@@ -66,7 +66,7 @@ int main (int argc, char** argv)
   ofstream oFile;
   //open input and output file
   iFile.open(argv[1]);
-  oFile.open(oFileName);
+  oFile.open("tsp_example_1.txt.tour");
 
   if(iFile.is_open()){
     while(getline(iFile, iFileName)){
