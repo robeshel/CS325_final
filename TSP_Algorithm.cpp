@@ -9,6 +9,7 @@ Nick Vandomelen
 */
 #include <stdio.h>
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <vector>
 #include <iomanip>
@@ -102,7 +103,7 @@ int main (int argc, char** argv)
 
 
   //always remember to close the files!
-  iFile.close(iFile);
-  oFile.close(oFile);
+  iFile.close();
+  oFile.close();
   return 0;
 }
