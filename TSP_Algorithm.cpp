@@ -65,8 +65,8 @@ int main (int argc, char** argv)
   ifstream iFile;
   ofstream oFile;
   //open input and output file
-  iFile.open(iFileName);
-  oFile.open(oFileName);
+  iFile.open(argv[1]);
+  oFile.open(argv + ".tour");
 
   if(iFile.is_open()){
     while(getline(iFile, iFileName)){
