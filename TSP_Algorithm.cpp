@@ -10,7 +10,7 @@ Nick Vandomelen
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
-#include <string>
+#include <string.h>
 #include <vector>
 using namespace std;
 
@@ -21,11 +21,12 @@ struct city {
 };
 
 //count the number of cities in a file
-int line_counter(string iFileName)
+//int line_counter(string iFileName)
+int line_counter()
 {
   ifstream iFile;
   string line;
-  iFile.open(iFileName);
+  iFile.open("tsp_example_1.txt");
 
   int lineCounter = 0;
   while (!iFile.eof())
@@ -57,7 +58,8 @@ int main (int argc, char *argv[])
   int numCities;
   int i;
 
-  numCities = line_counter(iFileName);  //set numCities equal to the number of cities in the input file
+  //numCities = line_counter(iFileName);  //set numCities equal to the number of cities in the input file
+  numCities = line_counter();  //set numCities equal to the number of cities in the input file
 
   ifstream iFile;
   ofstream oFile;
