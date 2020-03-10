@@ -49,35 +49,19 @@ int line_counter(char* iFileName)
     iFile1.close();
     return -1;
   }
-  
+
   iFile1.close();
   return (lineCounter - 1);   //-1 because of extra line
 }
 
 //finding a solution to the TSP
-void tsp_alg (vector<city> &cityVector, int numCities)      //ADD THE ACTUAL ALGORITHM
+void tsp_alg (vector<city> &cityVector, int numCities, char* iFileName)      //ADD THE ACTUAL ALGORITHM
 {
-  //input the tsp algorithm here
-  for (int i = 0; i < numCities; i++)
-  {
-    cout << "cityVector[" << i << "].identity = " << cityVector[i].identity << endl;
-    cout << "cityVector[" << i << "].x = " << cityVector[i].x << endl;
-    cout << "cityVector[" << i << "].y = " << cityVector[i].y << endl;
-    cout << endl;
-  }
-}
-
-int main (int argc, char* argv[])
-{
-  
-  //make sure to test file names with various lengths
-
-  //get name of file to open from command line
-  //names must be character pointers
-  char* iFileName = argv[1];
-  int iFileNameSize = strlen(iFileName);    //strlen(char[n]) = 1
+  int iFileNameSize = strlen(iFileName);              //strlen(char[n]) = 1
   char* oFileName = new char[iFileNameSize + 5];      //+5 for 5 characters from .tour
   strcpy(oFileName, iFileName);
+  ofstream oFile;
+
   char tour[] = {'.','t','o','u','r'};
   for (int k = 0; k < 5; k++)     //concatentate each character of ".tour"
   {
@@ -85,7 +69,37 @@ int main (int argc, char* argv[])
   }
   //at this point, oFileName should be correct
   //cout << "oFileName = " << oFileName << endl;
- 
+  oFile.open(oFileName);
+
+  //INPUT THE BRANCH AND BOUND ALGORITHM HERE
+  //cityVector[] has all identities, x coordinates, and y coordinates
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  //print the output to oFile
+  for (int i = 0; i < numCities; i++)
+  {
+    //oFile << "START" << '\t' << "tab?" << endl;
+    oFile << cityVector[i].identity << ' ';
+    oFile << cityVector[i].x << ' ';
+    oFile << cityVector[i].y << endl;
+  }
+  oFile << endl;        //adding an extra line for n+1 lines total
+
+  delete[] oFileName;   //free dynamic memory
+  oFile.close();
+}
+
+int main (int argc, char* argv[])
+{
+  //make sure to test file names with various lengths
+
+  //get name of file to open from command line
+  //names must be character pointers
+  char* iFileName = argv[1];
   int numCities;
   int i;
 
@@ -93,15 +107,12 @@ int main (int argc, char* argv[])
   if (numCities == -1)  //if file doesn't exist, exit normally
   {
     cout << "could not open file! Exiting.." << endl;
-    delete[] oFileName;
     return 0;
   }
-  
+
   //declare and open input/output file
   ifstream iFile;
-  ofstream oFile;
-  iFile.open(iFileName);
-  oFile.open(oFileName);
+  iFile.open(argv[1]);
 
   //create a city vector and fill it from input file
   //city cityVector[numCities];
@@ -112,6 +123,9 @@ int main (int argc, char* argv[])
     iFile >> cityVector[i].identity;
     iFile >> cityVector[i].x;
     iFile >> cityVector[i].y;
+    //cout << "cityVector[i].identity: " << cityVector[i].identity << '\t';
+    //cout << "cityVector[i].x" << cityVector[i].x << '\t';
+    //cout << "cityVector[i].y" << cityVector[i].y << endl;
     // cityVector[i].identity = i;
     // cityVector[i].x = i;
     // cityVector[i].y = i;
@@ -120,11 +134,9 @@ int main (int argc, char* argv[])
   //at this point, cityVector has all data from input file
 
   //cout << "going into tsp_alg()" << endl;
-  tsp_alg(cityVector, numCities);
+  tsp_alg(cityVector, numCities, iFileName);
 
-  delete[] oFileName;   //free dynamic memory
   //always remember to close the files!
   iFile.close();
-  oFile.close();
   return 0;
 }
