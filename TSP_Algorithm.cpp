@@ -8,11 +8,13 @@ Nick Vandomelen
 
 */
 #include <stdio.h>
+#include <string.h>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
 #include <iomanip>
+#include <stdlib.h>
 using namespace std;
 
 struct city {
@@ -23,18 +25,28 @@ struct city {
 
 //count the number of cities in a file
 //int line_counter(string iFileName)
-int line_counter()
+int line_counter(char* iFileName)
 {
   ifstream iFile1;
   string line;
-  iFile1.open("tsp_example_1.txt");
+  iFile1.open(iFileName);
 
   int lineCounter = 0;
-  while (!iFile1.eof())
+  if(iFile1.is_open())
   {
-    getline(iFile1, line);
-    lineCounter++;
+    while (!iFile1.eof())
+    {
+      getline(iFile1, line);
+      //cout << line << endl;   //print each line
+      lineCounter++;
+    }
   }
+  else
+  {
+    iFile1.close();
+    return -1;
+  }
+  
   iFile1.close();
   return (lineCounter - 1);   //-1 because of extra line
 }
@@ -54,32 +66,39 @@ void tsp_alg (vector<city> &cityVector, int numCities)
 
 int main (int argc, char* argv[])
 {
+  
+  //make sure to test file names with various lengths
 
   //get name of file to open from command line
-
-  string iFileName = argv[1];
-  //string oFileName = argv[1] + ".tour";
+  //names must be character pointers
+  char* iFileName = argv[1];
+  int iFileNameSize = strlen(iFileName);    //strlen(char[n]) = 1
+  char* oFileName = new char[iFileNameSize + 5];      //+5 for 5 characters from .tour
+  strcpy(oFileName, iFileName);
+  char tour[] = {'.','t','o','u','r'};
+  for (int k = 0; k < 5; k++)     //concatentate each character of ".tour"
+  {
+    oFileName[k + iFileNameSize] = tour[k];
+  }
+  //at this point, oFileName should be correct
+  //cout << "oFileName = " << oFileName << endl;
+ 
   int numCities;
   int i;
 
-  //numCities = line_counter(iFileName);  //set numCities equal to the number of cities in the input file
-  numCities = line_counter();  //set numCities equal to the number of cities in the input file
-
+  numCities = line_counter(iFileName);  //set numCities equal to the number of cities in the input file
+  if (numCities == -1)  //if file doesn't exist, exit normally
+  {
+    cout << "could not open file! Exiting.." << endl;
+    delete[] oFileName;
+    return 0;
+  }
+  
+  //declare and open input/output file
   ifstream iFile;
   ofstream oFile;
-  //open input and output file
-  iFile.open(argv[1]);
-  oFile.open("tsp_example_1.txt.tour");
-
-  // if(iFile.is_open()){
-  //   while(getline(iFile, iFileName)){
-  //     cout << "" << endl;
-  //   }
-  // }
-  // else{
-  //   cout << "file not found" << endl;
-  // }
-
+  iFile.open(iFileName);
+  oFile.open(oFileName);
 
   //create a city vector and fill it from input file
   //city cityVector[numCities];
@@ -97,9 +116,10 @@ int main (int argc, char* argv[])
 
   //at this point, cityVector has all data from input file
 
+  //cout << "going into tsp_alg()" << endl;
   tsp_alg(cityVector, numCities);
 
-
+  delete[] oFileName;   //free dynamic memory
   //always remember to close the files!
   iFile.close();
   oFile.close();
