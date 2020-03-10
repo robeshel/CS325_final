@@ -7,6 +7,9 @@ Shayla Rao
 Nick Vandomelen
 
 */
+
+//LAST WORK DONE LINE 46
+
 #include <stdio.h>
 #include <string.h>
 #include <fstream>
@@ -52,7 +55,7 @@ int line_counter(char* iFileName)
 }
 
 //finding a solution to the TSP
-void tsp_alg (vector<city> &cityVector, int numCities)
+void tsp_alg (vector<city> &cityVector, int numCities)      //ADD THE ACTUAL ALGORITHM
 {
   //input the tsp algorithm here
   for (int i = 0; i < numCities; i++)
