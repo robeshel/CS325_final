@@ -8,8 +8,6 @@ Nick Vandomelen
 
 */
 
-//LAST WORK DONE LINE 46
-
 #include <stdio.h>
 #include <string.h>
 #include <fstream>
@@ -25,7 +23,6 @@ struct city {
   int identity;
   int x;
   int y;
-  vector<city> connections;
 };
 
 //count the number of cities in a file
@@ -56,64 +53,25 @@ int line_counter(char* iFileName)
   return (lineCounter - 1);   //-1 because of extra line
 }
 
-//finding the distance between two cities, using pythag, rounding to nearest int
-int pythag (city city1, city city2)
+//return the distance between two cities, as a nearest int
+int distance (city city1, city city2)
 {
-  double distance = sqrt(pow((city1.x - city2.x), 2) + pow((city1.y - city2.y), 2));    //pythag theorem
-  int distanceInt = round(distance);        //make sure to round to an int
+  double distance = ( sqrt(pow((city1.x - city2.x), 2) + pow((city1.y - city2.y), 2)) ); //pythagorian's theorem
+  int distanceInt = round(distance);   //round the number to the nearest int
+  
   return distanceInt;
 }
 
-//recursive function to fill array
-//currIdx will start at 0
-void createTree (vector<city> &cityVector, int numCities, int currIdx, int recCounter)
-{
-  //cout << "hehe" << endl;
-  //numCities = max index to add to new connection
-  //currIdx = min index to add to new connection
-  
-  int numCitiesHalf = numCities / 2;    //rounds down
-  int numCitiesRemaining = numCities - numCitiesHalf;
-    
-  if (numCities == 1)
-  {
-   //cout << "base case reached" << endl;
-   return;      //base case reached, no further recursion
-  }
-  
-  //cout << "currIdx = " << currIdx << endl;
-  //cout << "numCities = " << numCities << endl;
-  //cout << "numCitiesHalf = " << numCitiesHalf << endl;
-  //cout << "numCitiesRemaining = " << numCitiesRemaining << endl;
-  
-  int conCounter = 0;
-  for (int i = currIdx; i < (currIdx + numCities); i++)
-  {
-    //cout << "test1" << endl;
-    cityVector[currIdx + recCounter].connections.push_back(city());
-    cityVector[currIdx + recCounter].connections[conCounter] = cityVector[i];
-    //cout << "test2" << endl;
-    conCounter++;
-  }
-  
-  //cout << "cityVector[" << currIdx << "].connections.size() = " << cityVector[currIdx].connections.size() << endl;
-  //cout << "testFINISH" << endl;
-  
-  createTree(cityVector, numCitiesHalf, currIdx, recCounter + 1);                           //left branch
-  createTree(cityVector, numCitiesRemaining, (currIdx + numCitiesHalf), recCounter + 1);    //right branch
-}
-
 //finding a solution to the TSP
-void tsp_alg (vector<city> &cityVector, int numCities, char* iFileName)      //THE ACTUAL ALGORITHM
+void tsp_alg (vector<city> &cityVector, int numCities, char* iFileName)      //ADD THE ACTUAL ALGORITHM
 {
   int iFileNameSize = strlen(iFileName);              //strlen(char[n]) = 1
   char* oFileName = new char[iFileNameSize + 5];      //+5 for 5 characters from .tour
-  int i, j, k;
   strcpy(oFileName, iFileName);
   ofstream oFile;
 
   char tour[] = {'.','t','o','u','r'};
-  for (k = 0; k < 5; k++)     //concatentate each character of ".tour"
+  for (int k = 0; k < 5; k++)     //concatentate each character of ".tour"
   {
     oFileName[k + iFileNameSize] = tour[k];
   }
@@ -124,31 +82,21 @@ void tsp_alg (vector<city> &cityVector, int numCities, char* iFileName)      //T
   //INPUT THE BRANCH AND BOUND ALGORITHM HERE
   //cityVector[] has all identities, x coordinates, and y coordinates
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-  //1. put all of the tours hotels in the root node (first node)
-  createTree(cityVector, numCities, 0, 0);
-    
-  //cout << numCities << endl;
-  for (i = 0; i < numCities + 1; i++)
-  {
-    cout << "cityVector[" << i << "].connections.size() = " << cityVector[i].connections.size() << endl;
-    cout << "cityVector[" << i << "] = {";
-    for (j = 0; j < cityVector[i].connections.size(); j++)
-    {
-      cout << cityVector[i].connections[j].identity << ", ";
-    }
-    cout << "}" << endl << endl;
-  }
   
+  /*
+  1. pick a random first node.
+  2. Put it into a tree.
+  3.
   
-  //2a. calculate cost of all hotels
-  //Hotel_cost_root = 0.5 * sum of two adjacent edges" distances
-  
+  */
+
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  cout << "distance(cityVector[0], cityVector[1]) = " << distance(cityVector[0], cityVector[1]) << endl;
 
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   //print the output to oFile
-  for (i = 0; i < numCities; i++)
+  for (int i = 0; i < numCities; i++)
   {
     //oFile << "START" << '\t' << "tab?" << endl;
     oFile << cityVector[i].identity << ' ';
@@ -201,10 +149,6 @@ int main (int argc, char* argv[])
 
   //at this point, cityVector has all data from input file
 
-  //cout << "going into tsp_alg()" << endl;
-  tsp_alg(cityVector, numCities, iFileName);
 
-  //always remember to close the files!
-  iFile.close();
-  return 0;
+  
 }
