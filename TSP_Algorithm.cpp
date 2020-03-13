@@ -8,8 +8,6 @@ Nick Vandomelen
 
 */
 
-//LAST WORK DONE LINE 46
-
 #include <stdio.h>
 #include <string.h>
 #include <fstream>
@@ -19,13 +17,23 @@ Nick Vandomelen
 #include <iomanip>
 #include <stdlib.h>
 #include <math.h>
+#include <cstddef>
 using namespace std;
 
 struct city {
   int identity;
   int x;
   int y;
-  vector<city> connections;
+  //vector<city> connections;
+  //vector<int> distances;    //costs?
+};
+
+struct node {
+  struct node* left;
+  struct node* right;
+  vector<city> cities;
+  int identity;
+  int totalCities;
 };
 
 //count the number of cities in a file
@@ -64,47 +72,67 @@ int pythag (city city1, city city2)
   return distanceInt;
 }
 
-//recursive function to fill array
-//currIdx will start at 0
-void createTree (vector<city> &cityVector, int numCities, int currIdx, int recCounter)
+//just printing the tree
+void rootPrint (node root)
 {
-  //cout << "hehe" << endl;
-  //numCities = max index to add to new connection
-  //currIdx = min index to add to new connection
+  cout << "root.totalCities = " << root.totalCities << endl;
+  cout << "root.left.cities[0].identity = " << root.left->cities[0].identity << endl;
   
-  int numCitiesHalf = numCities / 2;    //rounds down
-  int numCitiesRemaining = numCities - numCitiesHalf;
-    
+  rootPrint(*root.left);		//std::bad_alloc(), core dumped
+  rootPrint(*root.right);
+}
+
+//recursive filling of all nodes
+void nodeFill (node &currNode, int numCities)
+{ 
+  int i;
+  int numCitiesLeft  = numCities / 2;				//will round down
+  int numCitiesRight = numCities - numCitiesLeft;		//remaining nodes on the right
+  
+  //create branches no matter what, we always look at the branches
+  node right;
+  node left;
+  
+  //if (numCities == 1), then we are at a leaf
+  //so set left/right to Null, and exit recursion
+  //base case
   if (numCities == 1)
-  {
-   //cout << "base case reached" << endl;
-   return;      //base case reached, no further recursion
+  { 
+    left.left   = NULL;
+    left.right  = NULL;
+    right.left  = NULL;
+    right.right = NULL;
+    
+    return;
   }
+  //otherwise function normally
   
-  //cout << "currIdx = " << currIdx << endl;
-  //cout << "numCities = " << numCities << endl;
-  //cout << "numCitiesHalf = " << numCitiesHalf << endl;
-  //cout << "numCitiesRemaining = " << numCitiesRemaining << endl;
-  
-  int conCounter = 0;
-  for (int i = currIdx; i < (currIdx + numCities); i++)
+  left.totalCities = 0;
+  for (i = 0; i < numCitiesLeft; i++)
   {
-    //cout << "test1" << endl;
-    cityVector[currIdx + recCounter].connections.push_back(city());
-    cityVector[currIdx + recCounter].connections[conCounter] = cityVector[i];
-    //cout << "test2" << endl;
-    conCounter++;
+    left.cities.push_back(city());		//fill currNode.left's city vector
+    left.cities[i] = currNode.cities[i];
+    left.totalCities++;
   }
+  //cout << "left.totalCities = " << left.totalCities << endl;
+  right.totalCities = 0;
+  for (i = 0; i < numCitiesRight; i++)	//index through
+  {
+    right.cities.push_back(city());		//fill currNode.right's city vector
+    right.cities[i] = currNode.cities[i + numCitiesLeft];	//indexing for the right half of the array
+    right.totalCities++;
+  }
+  //cout << "right.totalCities = " << right.totalCities << endl;
   
-  //cout << "cityVector[" << currIdx << "].connections.size() = " << cityVector[currIdx].connections.size() << endl;
-  //cout << "testFINISH" << endl;
+  currNode.left = &left;
+  currNode.right = &right;
   
-  createTree(cityVector, numCitiesHalf, currIdx, recCounter + 1);                           //left branch
-  createTree(cityVector, numCitiesRemaining, (currIdx + numCitiesHalf), recCounter + 1);    //right branch
+  nodeFill (left, numCitiesLeft);
+  nodeFill (right, numCitiesRight);
 }
 
 //finding a solution to the TSP
-void tsp_alg (vector<city> &cityVector, int numCities, char* iFileName)      //THE ACTUAL ALGORITHM
+void tsp_alg (vector<city> &cityVector, node root, int numCities, char* iFileName)      //THE ACTUAL ALGORITHM
 {
   int iFileNameSize = strlen(iFileName);              //strlen(char[n]) = 1
   char* oFileName = new char[iFileNameSize + 5];      //+5 for 5 characters from .tour
@@ -118,7 +146,6 @@ void tsp_alg (vector<city> &cityVector, int numCities, char* iFileName)      //T
     oFileName[k + iFileNameSize] = tour[k];
   }
   //at this point, oFileName should be correct
-  //cout << "oFileName = " << oFileName << endl;
   oFile.open(oFileName);
 
   //INPUT THE BRANCH AND BOUND ALGORITHM HERE
@@ -126,19 +153,8 @@ void tsp_alg (vector<city> &cityVector, int numCities, char* iFileName)      //T
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     
   //1. put all of the tours hotels in the root node (first node)
-  createTree(cityVector, numCities, 0, 0);
+  //newTree = createTree(cityVector, numCities, 0, 0);
     
-  //cout << numCities << endl;
-  for (i = 0; i < numCities + 1; i++)
-  {
-    cout << "cityVector[" << i << "].connections.size() = " << cityVector[i].connections.size() << endl;
-    cout << "cityVector[" << i << "] = {";
-    for (j = 0; j < cityVector[i].connections.size(); j++)
-    {
-      cout << cityVector[i].connections[j].identity << ", ";
-    }
-    cout << "}" << endl << endl;
-  }
   
   
   //2a. calculate cost of all hotels
@@ -181,11 +197,10 @@ int main (int argc, char* argv[])
   //declare and open input/output file
   ifstream iFile;
   iFile.open(argv[1]);
-
-  //create a city vector and fill it from input file
-  //city cityVector[numCities];
+  
+  //create a city vector
   vector<city> cityVector;
-  for (i = 0; i < numCities; i++)
+  for (i = 0; i < numCities; i++)		//fill the city vector from input file
   {
     cityVector.push_back(city());
     iFile >> cityVector[i].identity;
@@ -198,13 +213,27 @@ int main (int argc, char* argv[])
     // cityVector[i].x = i;
     // cityVector[i].y = i;
   }
-
   //at this point, cityVector has all data from input file
-
-  //cout << "going into tsp_alg()" << endl;
-  tsp_alg(cityVector, numCities, iFileName);
-
+    
+  node root; //creating and filling a root node
+  root.totalCities = 0;
+  for (i = 0; i < numCities; i++)
+  {
+    root.cities.push_back(city());
+    root.cities[i] = cityVector[i];		//MIGHT BE FUCKING UP
+    root.totalCities++;
+  }
+  //cout << "root.totalCities = " << root.totalCities << endl;
+  //int numNodes = (numCities * 2) - 1;
+  nodeFill(root, numCities);
+  
+  rootPrint(root);
+  
+  //running the actual TSP algorithm
+  tsp_alg(cityVector, root, numCities, iFileName);
+  
   //always remember to close the files!
   iFile.close();
+   
   return 0;
 }
