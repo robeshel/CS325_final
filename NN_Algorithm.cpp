@@ -1,3 +1,11 @@
+/*
+Shayla Rao
+Nick Vandomelen
+Sheldon Roberts
+
+ Nearest Neighbor Algorithm for TSP
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <fstream>
@@ -5,14 +13,7 @@
 #include <string>
 #include <vector>
 #include <iomanip>
+#include <stdlib.h>
 #include <math.h>
+#include <cstddef>
 using namespace std;
-
-
-int main()
-{
-  //cout << "sizeof(char) = " << sizeof(char) << endl;
-  
-  cout << (1/2) << endl;
-  return 0;
-}
